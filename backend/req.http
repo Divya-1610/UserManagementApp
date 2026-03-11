@@ -1,0 +1,41 @@
+//get all users
+GET http://localhost:3000/user-api/users
+###
+
+//get users by id
+GET http://localhost:3000/user-api/users/69a692949feb2f19902dbac7
+###
+
+POST  http://localhost:3000/user-api/users
+Content-Type: application/json
+
+{
+    "username": "divya",
+    "email": "divya@gmail.com",
+    "dob": "2006-10-26",
+    "mobile": 1233334456
+}
+###
+
+//hard delete
+DELETE http://localhost:3000/user-api/user/del/69a6990d8382f79c0870e1c3
+###
+
+//soft delete
+PUT http://localhost:3000/user-api/users/block/69a7fd0a1701fbdc75cf7e7d
+###
+
+//activate user
+PATCH http://localhost:3000/user-api/users/activate/69a7fd0a1701fbdc75cf7e7d
+###
+
+//update user
+PUT http://localhost:3000/user-api/users/update/69a7fd0a1701fbdc75cf7e7d
+Content-Type: application/json
+
+{
+    "username": "divya",
+    "email": "sampel@gmail.com",
+    "dob": "2006-10-26",
+    "mobile": 1234567890
+}
