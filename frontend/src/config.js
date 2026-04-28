@@ -1,1 +1,1 @@
-export const API_URL = "https://usermanagementapp-fkpq.onrender.com";
+export const API_URL = "https://usermanagementapp-fkpq.onrender.com/user-api";
