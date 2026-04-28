@@ -31,7 +31,20 @@ const userschema = new Schema(
 
    },
    {
-    timestamps:true
+    timestamps:true,
+    toJSON: {
+      transform: (doc, ret) => {
+        // Format dob to YYYY-MM-DD
+        if (ret.dob) {
+          ret.dob = ret.dob.toISOString().split('T')[0];
+        }
+        // Format timestamps to a readable string without 'Z'
+        if (ret.createdAt) {
+          ret.createdAt = ret.createdAt.toISOString().replace('T', ' ').split('.')[0];
+        }
+        return ret;
+      }
+    }
    }
    
 )

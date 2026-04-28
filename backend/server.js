@@ -1,57 +1,49 @@
 import exp from 'express'
 import { userapp } from './APIs/userAPI.js'
 import { connect } from 'mongoose'
-import {config} from 'dotenv'
+import { config } from 'dotenv'
 import cors from 'cors'
+import path from 'path' // Required
+import { fileURLToPath } from 'url' // Required
 
 config()
 
-const app= exp()
+// Fix for __dirname in ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(cors(
-  {
-    origin:['http://localhost:5173']
-  }
-))
+const app = exp()
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}));
+
+
 
 app.use(exp.json()) 
 
+
 async function connectdb() {
-    try{
-        await connect('mongodb://localhost:27017/usermgmt')
+    try {
+        await connect(process.env.DB_URL)
         console.log("connected to db")
-        app.listen(3000, ()=>console.log("listening on port 3000......."))
+        
+        // Use process.env.PORT for deployment, fallback to 3000 locally
+        const PORT = process.env.PORT || 3000
+        app.listen(PORT, () => console.log(`listening on port ${PORT}.......`))
     }
-    catch(err){
-        console.log("error occured while connecting to database",err)
+    catch(err) {
+        console.log("error occured while connecting to database", err)
     }
-    
 }
 connectdb()
 
-//body parsing middleware
-app.use('/user-api',userapp)
+// Error handling middleware
 app.use((err, req, res, next) => {
-  // Mongoose validation error
-  if (err.name === "ValidationError") {
-    return res.status(400).json({
-      message: "Validation failed",
-      errors: err.errors,
-    });
-  }
-  // Invalid ObjectId
-  if (err.name === "CastError") {
-    return res.status(400).json({
-      message: "Invalid ID format",
-    });
-  }
-  // Duplicate key
-  if (err.code === 11000) {
-    return res.status(409).json({
-      message: "Duplicate field value",
-    });
-  }
-  res.status(500).json({
-    message: "Internal Server Error",
-  });
+  if (err.name === "ValidationError") return res.status(400).json({ message: "Validation failed", errors: err.errors });
+  if (err.name === "CastError") return res.status(400).json({ message: "Invalid ID format" });
+  if (err.code === 11000) return res.status(409).json({ message: "Duplicate field value" });
+  
+  res.status(500).json({ message: "Internal Server Error" });
 });
