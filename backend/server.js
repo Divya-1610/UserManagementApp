@@ -22,6 +22,8 @@ app.use(cors({
 
 
 app.use(exp.json()) 
+app.use('/user-api', userapp); 
+
 
 
 async function connectdb() {
