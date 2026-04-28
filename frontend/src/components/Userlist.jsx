@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {Navigate} from 'react-router'
+import { API_URL } from '../config.js'
 
 function Userlist() {
   const [users,setusers]=useState([])
@@ -9,7 +10,7 @@ function Userlist() {
   useEffect(()=>{
     const getusers=async()=>{
       try{
-      let res= await fetch('http://localhost:3000/user-api/users')
+      let res= await fetch(`${API_URL}/users`)
       let data= await res.json()
       if (res.status==200)
       {

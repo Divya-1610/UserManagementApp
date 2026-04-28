@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import {useForm} from 'react-hook-form'
+import { API_URL } from '../config.js'
+
 function Adduser() {
 
   let {register, handleSubmit,reset}=useForm()
@@ -10,7 +12,7 @@ function Adduser() {
     console.log(userobj)
     reset()
     try{
-      let res= await fetch("http://localhost:3000/user-api/users",{
+      let res= await fetch(`${API_URL}/users`,{
         method:"POST",
         headers:{
           "content-Type": "application/json"
